@@ -435,18 +435,39 @@ var carrito = [];
 // Variable para almacenar el código promocional canjeado
 var codigoPromocional = "";
 
+// Variable para indicar si se seleccionó el paquete "Acceso básico"
+var accesoBasicoSeleccionado = false;
+
 // Evento de clic en el botón "Obtener" de cualquier paquete
 $(".btn-obtener").click(function() {
     var paqueteIndex = $(this).index(".btn-obtener");
     agregarPaqueteAlCarrito(paqueteIndex);
+
+    // Verificar si se seleccionó el paquete "Acceso básico"
+    if (paqueteIndex === 0) {
+        accesoBasicoSeleccionado = true;
+    }
 });
 
 // Función para validar el código promocional
 function validarCodigoPromocional(codigoIngresado) {
-    if (codigoIngresado === "desc3") {
-        return 0.03; // Descuento del 3%
+    if (accesoBasicoSeleccionado) {
+        // Si se seleccionó "Acceso básico", no se permite código promocional
+        return null;
     } else if (codigoIngresado === "desc5") {
         return 0.05; // Descuento del 5%
+    } else if (codigoIngresado === "desc10") {
+        return 0.1; // Descuento del 10%
+    } else if (codigoIngresado === "desc15") {
+        return 0.15; // Descuento del 15%
+    } else if (codigoIngresado === "desc20") {
+        return 0.2; // Descuento del 20%
+    } else if (codigoIngresado === "desc25") {
+        return 0.25; // Descuento del 25%
+    } else if (codigoIngresado === "desc30") {
+        return 0.3; // Descuento del 30%
+    } else if (codigoIngresado === "desc35") {
+        return 0.35; // Descuento del 35%
     } else {
         return null; // Código promocional no válido
     }
@@ -469,9 +490,10 @@ $("#btnCanjear").click(function() {
 
 // Evento que se ejecuta cuando se cierra el modal
 $('#modalDetails').on('hidden.bs.modal', function () {
-    // Reiniciar el carrito y el código promocional al cerrar el modal
+    // Reiniciar el carrito, el código promocional y la variable de acceso básico al cerrar el modal
     carrito = [];
     codigoPromocional = "";
+    accesoBasicoSeleccionado = false;
     actualizarCarrito();
 
     // Limpiar el campo de entrada de texto
@@ -498,7 +520,7 @@ function agregarPaqueteAlCarrito(paqueteIndex) {
     {
         nombre: "Curso premium",
         descripcion: "Acceso completo a todos los beneficios que ofrecemos en clases, del curso y la plataforma",
-        precio: 50000
+        precio: 55000
     }
     ];
 
@@ -524,7 +546,7 @@ function aplicarDescuento(nombre, descripcion, descuentoPorcentaje) {
     // Actualizar el contenido del carrito con el descuento
     var carritoHTML = '<ul class="list-group mb-3">';
     for (var i = 0; i < carrito.length; i++) {
-    carritoHTML += '<li class="list-group-item d-flex justify-content-between lh-sm">';
+    carritoHTML += '<li class="list-group-item d-flex justify-content-between lh-sm border-primary">';
     carritoHTML += '<div>';
     carritoHTML += '<h6 class="my-0">' + carrito[i].nombre + '</h6>';
     carritoHTML += '<small class="text-body-secondary">' + carrito[i].descripcion + '</small>';
@@ -534,7 +556,7 @@ function aplicarDescuento(nombre, descripcion, descuentoPorcentaje) {
     }
 
     // Agregar el descuento al carrito
-    carritoHTML += '<li class="list-group-item d-flex justify-content-between bg-body-tertiary">';
+    carritoHTML += '<li class="list-group-item d-flex justify-content-between bg-body-tertiary border-primary">';
     carritoHTML += '<div class="text-success">';
     carritoHTML += '<h6 class="my-0">' + nombre + '</h6>';
     carritoHTML += '<small>' + descripcion + '</small>';
@@ -542,7 +564,7 @@ function aplicarDescuento(nombre, descripcion, descuentoPorcentaje) {
     carritoHTML += '<span class="text-success">₡' + descuentoColonesFormatted + '</span>';
     carritoHTML += '</li>';
 
-    carritoHTML += '<li class="list-group-item d-flex justify-content-between">';
+    carritoHTML += '<li class="list-group-item d-flex justify-content-between border-primary">';
     carritoHTML += '<span>Total (CRC)</span>';
     carritoHTML += '<strong>₡' + totalConDescuentoFormatted + '</strong>';
     carritoHTML += '</li>';
@@ -573,7 +595,7 @@ function actualizarCarrito() {
     var total = calcularTotalCarrito();
     var carritoHTML = '<ul class="list-group mb-3">';
     for (var i = 0; i < carrito.length; i++) {
-    carritoHTML += '<li class="list-group-item d-flex justify-content-between lh-sm">';
+    carritoHTML += '<li class="list-group-item d-flex justify-content-between lh-sm border-primary">';
     carritoHTML += '<div>';
     carritoHTML += '<h6 class="my-0">' + carrito[i].nombre + '</h6>';
     carritoHTML += '<small class="text-body-secondary">' + carrito[i].descripcion + '</small>';
@@ -594,7 +616,7 @@ function actualizarCarrito() {
     carritoHTML += '</li>';
     }
 
-    carritoHTML += '<li class="list-group-item d-flex justify-content-between">';
+    carritoHTML += '<li class="list-group-item d-flex justify-content-between border-primary">';
     carritoHTML += '<span>Total (CRC)</span>';
     carritoHTML += '<strong>₡' + total.toLocaleString() + '</strong>';
     carritoHTML += '</li>';
